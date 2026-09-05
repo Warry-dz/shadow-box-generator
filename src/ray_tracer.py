@@ -120,16 +120,21 @@ def ray_tracer_algorithm(walls, light_position, mask):
                 wall_name, hit_point = calculate_intersection(light_position, ray_vector)
                 
                 # 4. Punch a hole (0) in the appropriate box wall with a brush size to prevent gaps
+                # 4. Punch a hole (0) in the appropriate box wall
                 if wall_name is not None:
                     w_row, w_col = map_3d_to_wall_pixel(wall_name, hit_point)
                     
-                    # Define a brush size (e.g., 1 means a 3x3 block of pixels will be punched)
-                    brush_size = 1 
+                    # --- DYNAMIC BRUSH SIZE FIX ---
+                    # Make brush size adaptive: larger near the bottom (hz is small) to prevent gaps
+                    # As hz approaches 0, brush size increases; near the top, it's smaller.
+                    base_brush = 1
+                    if hit_z < (cfg.BOX_HEIGHT * 0.5):
+                        base_brush = 2 # Increase brush size for the lower half of the walls
                     
                     try:
-                        # Punch a small neighborhood around the hit point to eliminate gaps
-                        for dr in range(-brush_size, brush_size + 1):
-                            for dc in range(-brush_size, brush_size + 1):
+                        # Punch a neighborhood around the hit point using the adaptive brush
+                        for dr in range(-base_brush, base_brush + 1):
+                            for dc in range(-base_brush, base_brush + 1):
                                 walls[wall_name][w_row + dr, w_col + dc] = 0
                                 
                         holes_punched += 1
