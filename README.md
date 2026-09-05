@@ -33,8 +33,12 @@ sh_lamp/
 ├── main.py                  # Main orchestration script
 └── README.md                # Project documentation
 
+``` 
 
-📐 How It Works (The Physics & Math)
+---
+
+## 📐 How It Works (The Physics & Math)
+
 Image Masking: The engine loads a target image and converts it into a binary black-and-white matrix, where black pixels represent the light-emitting points of your design.
 
 Back-Propagation (Inverse Rays): For every target pixel, the algorithm casts an inverse ray from the target wall, through the box interior, straight back to the internal light source position.
